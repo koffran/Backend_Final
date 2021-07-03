@@ -17,9 +17,8 @@ router.get('/:id?', (req,res) =>{
     else{
         try {
             res.json(productsService.getProductById(parseInt(req.params.id)))
-            
         } catch (error) {
-            res.sendStatus(404)
+            res.status(404).send(error.message)
             
         }
 
@@ -30,10 +29,14 @@ router.get('/:id?', (req,res) =>{
  * Incorpora productos al listado
  * Solo administradores
  */
-
 router.post('/', (req, res)=>{
-    productsService.createProduct(req.body);
-    res.sendStatus(201)
+   try {
+        productsService.createProduct(req.body);
+        res.sendStatus(201)   
+   } catch (error) {
+        res.status(404).send(error.message)    
+   }
+    
 })
 
 
@@ -42,8 +45,13 @@ router.post('/', (req, res)=>{
  * Solo administradores
  */
 router.patch('/:id', (req,res)=>{
-    productsService.updateProductById(req)
-    res.sendStatus(204);
+    try {
+        productsService.updateProductById(req)
+         res.sendStatus(204);   
+    } catch (error) {
+        res.status(404).send(error.message)
+    }
+    
 })
 
 
@@ -52,8 +60,14 @@ router.patch('/:id', (req,res)=>{
  * Solo administradores.
  */
 router.delete('/:id',(req,res)=>{
-    productsService.deleteProductById(parseInt(req.params.id))
-    res.sendStatus(200);
+    try {
+        productsService.deleteProductById(parseInt(req.params.id))
+        res.sendStatus(200);  
+    } catch (error) {
+        res.status(404).send(error.message)
+        
+    }
+    
 })
 
 
