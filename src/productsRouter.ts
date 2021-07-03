@@ -10,7 +10,6 @@ const searchById = (id:Number)=>{
         return false;
     }
     return found
-
 }
 
 
@@ -18,7 +17,7 @@ const searchById = (id:Number)=>{
  * Permite listar todos los productos o uno por su ID
  * disponible para usuarios y administradores
  */
-router.get('/listar/:id?', (req,res) =>{
+router.get('/:id?', (req,res) =>{
 
     if(req.params.id === undefined){
         productos.length ===0 ?
@@ -42,7 +41,7 @@ router.get('/listar/:id?', (req,res) =>{
  * Incorpora productos al listado
  * Solo administradores
  */
-router.post('/agregar', (req, res)=>{
+router.post('/', (req, res)=>{
     let now = new Date();
     let d:Date = new Date(now.getFullYear(),now.getMonth(), now.getDate())
     const {nombre, descripcion, codigo, foto, precio, stock} = req.body;
@@ -55,7 +54,7 @@ router.post('/agregar', (req, res)=>{
  * Actualiza un producto por ID
  * Solo administradores
  */
-router.patch('/actualizar/:id', (req,res)=>{
+router.patch('/:id', (req,res)=>{
     let product = searchById(parseInt(req.params.id))
     if(product=== false){
         res.sendStatus(404);
@@ -71,7 +70,7 @@ router.patch('/actualizar/:id', (req,res)=>{
  * Borra un producto por ID
  * Solo administradores.
  */
-router.delete('/borrar/:id',(req,res)=>{
+router.delete('/:id',(req,res)=>{
     let product = searchById(parseInt(req.params.id))
     if(product === false){
         res.sendStatus(404);
