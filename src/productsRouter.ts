@@ -56,7 +56,15 @@ router.post('/agregar', (req, res)=>{
  * Solo administradores
  */
 router.patch('/actualizar/:id', (req,res)=>{
-    res.send('actualizado')
+    let product = searchById(parseInt(req.params.id))
+    if(product=== false){
+        res.sendStatus(404);
+    }
+    else{
+        const {stock} = req.body;
+        product.stock = stock;
+        res.sendStatus(204);
+    }
 })
 
 /**
@@ -64,7 +72,13 @@ router.patch('/actualizar/:id', (req,res)=>{
  * Solo administradores.
  */
 router.delete('/borrar/:id',(req,res)=>{
-    res.send('eliminado')
+    let product = searchById(parseInt(req.params.id))
+    if(product === false){
+        res.sendStatus(404);
+    }{
+        productos = productos.filter(product => product.id !== parseInt(req.params.id))
+        res.sendStatus(200)
+    }
 })
 
 
