@@ -1,17 +1,9 @@
+import { resolve4 } from 'dns';
 import express from 'express';
 const router = express.Router();
 import Product from './product'
-
-let productos:Product[] = [];
-
-const searchById = (id:Number)=>{
-    let found = productos.find(product => product.id ===id)
-    if(!found){
-        return false;
-    }
-    return found
-}
-
+import {ProductsService} from './service/productos.service';
+export const productsService = new ProductsService();
 
 /**
  * Permite listar todos los productos o uno por su ID
@@ -20,18 +12,15 @@ const searchById = (id:Number)=>{
 router.get('/:id?', (req,res) =>{
 
     if(req.params.id === undefined){
-        productos.length ===0 ?
-        res.send({error: 'No hay productos cargados'})
-        : res.json(productos)
+         res.json(productsService.getAllProducts())
     }
     else{
-        let product = searchById(parseInt(req.params.id))
-        if(product != false)
-        {
-            res.json(product);
-        }        
-        else{
+        try {
+            res.json(productsService.getProductById(parseInt(req.params.id)))
+            
+        } catch (error) {
             res.sendStatus(404)
+            
         }
 
     }
@@ -41,43 +30,30 @@ router.get('/:id?', (req,res) =>{
  * Incorpora productos al listado
  * Solo administradores
  */
+
 router.post('/', (req, res)=>{
-    let now = new Date();
-    let d:Date = new Date(now.getFullYear(),now.getMonth(), now.getDate())
-    const {nombre, descripcion, codigo, foto, precio, stock} = req.body;
-    let product = new Product(d,nombre,descripcion,codigo,foto,precio,stock,productos.length+1)
-    productos.push(product);
+    productsService.createProduct(req.body);
     res.sendStatus(201)
 })
+
 
 /**
  * Actualiza un producto por ID
  * Solo administradores
  */
 router.patch('/:id', (req,res)=>{
-    let product = searchById(parseInt(req.params.id))
-    if(product=== false){
-        res.sendStatus(404);
-    }
-    else{
-        const {stock} = req.body;
-        product.stock = stock;
-        res.sendStatus(204);
-    }
+    productsService.updateProductById(req)
+    res.sendStatus(204);
 })
+
 
 /**
  * Borra un producto por ID
  * Solo administradores.
  */
 router.delete('/:id',(req,res)=>{
-    let product = searchById(parseInt(req.params.id))
-    if(product === false){
-        res.sendStatus(404);
-    }{
-        productos = productos.filter(product => product.id !== parseInt(req.params.id))
-        res.sendStatus(200)
-    }
+    productsService.deleteProductById(parseInt(req.params.id))
+    res.sendStatus(200);
 })
 
 
