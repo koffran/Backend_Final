@@ -1,5 +1,17 @@
 import express from 'express';
 const router = express.Router();
+import Product from './product'
+
+let productos:Product[] = [];
+
+const searchById = (id:Number)=>{
+    let found = productos.find(product => product.id ===id)
+    if(!found){
+        return false;
+    }
+    return found
+
+}
 
 
 /**
@@ -7,7 +19,23 @@ const router = express.Router();
  * disponible para usuarios y administradores
  */
 router.get('/listar/:id?', (req,res) =>{
-    res.send({error:`no hay productos cargados para el id: ${req.params.id}`})
+
+    if(req.params.id === undefined){
+        productos.length ===0 ?
+        res.send({error: 'No hay productos cargados'})
+        : res.json(productos)
+    }
+    else{
+        let product = searchById(parseInt(req.params.id))
+        if(product != false)
+        {
+            res.json(product);
+        }        
+        else{
+            res.sendStatus(404)
+        }
+
+    }
 })
 
 /**
@@ -15,7 +43,12 @@ router.get('/listar/:id?', (req,res) =>{
  * Solo administradores
  */
 router.post('/agregar', (req, res)=>{
-    res.send('agregado')
+    let now = new Date();
+    let d:Date = new Date(now.getFullYear(),now.getMonth(), now.getDate())
+    const {nombre, descripcion, codigo, foto, precio, stock} = req.body;
+    let product = new Product(d,nombre,descripcion,codigo,foto,precio,stock,productos.length+1)
+    productos.push(product);
+    res.sendStatus(201)
 })
 
 /**
@@ -23,7 +56,15 @@ router.post('/agregar', (req, res)=>{
  * Solo administradores
  */
 router.patch('/actualizar/:id', (req,res)=>{
-    res.send('actualizado')
+    let product = searchById(parseInt(req.params.id))
+    if(product=== false){
+        res.sendStatus(404);
+    }
+    else{
+        const {stock} = req.body;
+        product.stock = stock;
+        res.sendStatus(204);
+    }
 })
 
 /**
@@ -31,7 +72,13 @@ router.patch('/actualizar/:id', (req,res)=>{
  * Solo administradores.
  */
 router.delete('/borrar/:id',(req,res)=>{
-    res.send('eliminado')
+    let product = searchById(parseInt(req.params.id))
+    if(product === false){
+        res.sendStatus(404);
+    }{
+        productos = productos.filter(product => product.id !== parseInt(req.params.id))
+        res.sendStatus(200)
+    }
 })
 
 
