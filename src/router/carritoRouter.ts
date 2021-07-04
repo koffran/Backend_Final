@@ -1,9 +1,9 @@
 import express from 'express';
 const router = express.Router();
-import carrito from './carrito';
-import Product from './product'
-import {productsService} from '../src/productsRouter'
-import { CarritoService } from './service/carrito.service';
+import carrito from '../service/carrito';
+import Product from '../service/product'
+import {productsService} from './productsRouter'
+import { CarritoService } from '../service/carrito.service';
 const carritoService = new CarritoService();
 
 //let carts:carrito[] =[];

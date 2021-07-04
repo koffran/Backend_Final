@@ -1,8 +1,8 @@
 import { resolve4 } from 'dns';
 import express from 'express';
 const router = express.Router();
-import Product from './product'
-import {ProductsService} from './service/productos.service';
+import Product from '../service/product'
+import {ProductsService} from '../service/productos.service';
 export const productsService = new ProductsService();
 
 /**
@@ -64,12 +64,8 @@ router.delete('/:id',(req,res)=>{
         productsService.deleteProductById(parseInt(req.params.id))
         res.sendStatus(200);  
     } catch (error) {
-        res.status(404).send(error.message)
-        
+        res.status(404).send(error.message) 
     }
     
 })
-
-
-
 export default router;
