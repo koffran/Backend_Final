@@ -1,4 +1,4 @@
-import express from 'express'
+import express,{Request,Response} from 'express'
 import productsRouter from './router/productsRouter';
 import carritoRouter from './router/carritoRouter';
 
@@ -10,6 +10,9 @@ app.use(express.urlencoded({extended:true}))
 
 app.use('/productos', productsRouter);
 app.use('/carrito', carritoRouter)
+app.get('*',(req:Request,res:Response)=>{
+    res.status(404).send({error: -2, descripcion: `ruta ${req.path} methodo ${req.method} no implementada`})
+})
 
 const server = http.listen(process.env.PORT || 8080, ()=>{
     console.log("Running on port 8080");
