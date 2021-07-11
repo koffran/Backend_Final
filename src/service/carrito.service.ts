@@ -11,9 +11,7 @@ export class CarritoService{
     private getProductsFromFile() {     
         try {
             this.cartTxt.read().then((val:any) => {
-                if(val!=[]){
-                   // console.log(val);
-                    
+                if(val!=[]){                    
                     JSON.parse(val).forEach((element:any) => {
                         const {id} = element;
                         console.log(id);
@@ -29,7 +27,7 @@ export class CarritoService{
     }
 
     getCartProducts(){
-        this.getProductsFromFile()
+        //this.getProductsFromFile()
         
         return this.cart.productos;
     }
@@ -42,21 +40,15 @@ export class CarritoService{
         return found
     }
 
-    addProductById =(id_producto:Number)=>{
-        const prod = productsService.getProductById(id_producto)
+    addProductById =async (id_producto:Number)=>{
+        const prod = await productsService.getProductById(id_producto)
         this.cart.productos.push(prod)
         this.cartTxt.save(this.cart.productos)
     }
 
-    deleteProductById =(id_producto:Number)=>{
-        const prod = productsService.getProductById(id_producto)
+    deleteProductById = async(id_producto:Number)=>{
+        const prod = await productsService.getProductById(id_producto)
         this.cart.productos = this.cart.productos.filter(producto => producto.productId !== prod.productId)
         this.cartTxt.save(this.cart.productos)        
     }
-
-    
-
-
-
-
 }

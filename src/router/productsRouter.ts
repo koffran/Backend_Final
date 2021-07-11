@@ -10,17 +10,16 @@ const admin = true;
  * Permite listar todos los productos o uno por su ID
  * disponible para usuarios y administradores
  */
-router.get('/:id?',(req,res) =>{
+router.get('/:id?', async (req,res) =>{
     try {
         if(req.params.id === undefined){
-            res.json(productsService.getAllProducts())
+            res.json(await productsService.getAllProducts())
         }
         else{
-        res.json(productsService.getProductById(parseInt(req.params.id)))
+        res.json(await productsService.getProductById(parseInt(req.params.id)))
         }
     } catch (error) {
-        res.status(404).send(error.message)
-        
+        res.status(404).send(error.message)   
     }    
 })
 
