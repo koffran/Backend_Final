@@ -1,12 +1,13 @@
 import Product from "../service/product";
 import Files from "../persistencia/Files";
+const insertProducts = require("../persistencia/Databases/MariaDB/insert_products")
 
 export class ProductsService{
     private productos:Product[] = [];
     private productsTxt:Files = new Files('src/persistencia/products.txt');
 
 
-    private getProductsFromFile() {     
+    private  getProductsFromFile() {     
         try {
             this.productsTxt.read().then((val:any) => {
                 if(val!=[]){                    
@@ -21,14 +22,13 @@ export class ProductsService{
         }   
     }
 
-    getAllProducts(){
-        this.getProductsFromFile()
+     getAllProducts(){
+         this.getProductsFromFile()
         return this.productos;
     }
 
     getProductById(id:Number){
-        let found = this.productos.find(product => product.id ===id)
-        
+        let found = this.productos.find(product => product.productId ===id)        
 
         if(!found){
             throw new Error('Producto no encontrado')
@@ -44,6 +44,8 @@ export class ProductsService{
         let product = new Product(d,nombre,descripcion,codigo,foto,precio,stock,this.productos.length+1)
         this.productos.push(product);
         this.productsTxt.save(this.productos)
+        insertProducts(product);
+
     }
 
     updateProductById(data:any){
@@ -57,7 +59,7 @@ export class ProductsService{
 
     deleteProductById(id:Number){
         const found = this.getProductById(id);
-        this.productos = this.productos.filter(producto => producto.id !== found.id)
+        this.productos = this.productos.filter(producto => producto.productId !== found.productId)
         this.productsTxt.save(this.productos)
     }
 

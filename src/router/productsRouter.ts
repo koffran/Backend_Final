@@ -4,7 +4,7 @@ const router = express.Router();
 import Product from '../service/product'
 import {ProductsService} from '../service/productos.service';
 export const productsService = new ProductsService();
-const admin = false;
+const admin = true;
 
 /**
  * Permite listar todos los productos o uno por su ID

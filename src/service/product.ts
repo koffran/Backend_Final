@@ -6,7 +6,7 @@ export default class Product{
     foto:String;
     precio:Number;
     stock:Number;
-    id:Number
+    productId:Number
 
     constructor(timeStamp:Date, nombre:String, descripcion:String,codigo:String, foto:String, precio:Number, stock:Number, id:Number){
         this.timeStamp = timeStamp;
@@ -16,6 +16,6 @@ export default class Product{
         this.foto = foto;
         this.precio = precio;
         this.stock = stock;
-        this.id = id;
+        this.productId = id;
     }
 }

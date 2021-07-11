@@ -35,7 +35,7 @@ export class CarritoService{
     }
 
     getCartProductById = (id:Number)=>{
-        let found = this.cart.productos.find(product=> product.id ===id)
+        let found = this.cart.productos.find(product=> product.productId ===id)
         if(!found){
             throw new Error('Producto no encontrado')
         }
@@ -50,7 +50,7 @@ export class CarritoService{
 
     deleteProductById =(id_producto:Number)=>{
         const prod = productsService.getProductById(id_producto)
-        this.cart.productos = this.cart.productos.filter(producto => producto.id !== prod.id)
+        this.cart.productos = this.cart.productos.filter(producto => producto.productId !== prod.productId)
         this.cartTxt.save(this.cart.productos)        
     }
 

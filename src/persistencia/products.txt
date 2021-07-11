@@ -1,1 +1,1 @@
-[{"timeStamp":"2021-07-04T03:00:00.000Z","nombre":"Producto 4","descripcion":"Este es  un producto","codigo":"dasdasm1dsa","foto":"FOTO1.JPG","precio":50,"stock":6,"id":1}]
+[{"timeStamp":"2021-07-10T03:00:00.000Z","nombre":"Producto ","descripcion":"Producto desde perfil usuario","codigo":"dasdasm1dsa","foto":"FOTO1.JPG","precio":50,"stock":6,"productId":1},{"timeStamp":"2021-07-10T03:00:00.000Z","nombre":"Producto 2","descripcion":"otro producto","codigo":"alguncodigo","foto":"FOTO2.JPG","precio":500,"stock":60,"productId":2}]
