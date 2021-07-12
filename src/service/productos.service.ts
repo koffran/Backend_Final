@@ -1,6 +1,6 @@
 import Product from "../service/product";
 import Files from "../persistencia/Files";
-import ProductsMariaDB from "../persistencia/Databases/MariaDB/mDB";
+import ProductsMariaDB from "../persistencia/Databases/MariaDB/ProductsMariaDB";
 
 
 export class ProductsService{
