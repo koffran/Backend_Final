@@ -1,11 +1,12 @@
 import Product from "../service/product";
 import Files from "../persistencia/Files";
-const insertProducts = require("../persistencia/Databases/MariaDB/insert_products")
-const getAll =require("../persistencia/Databases/MariaDB/select_products")
+import ProductsMariaDB from "../persistencia/Databases/MariaDB/mDB";
+
+
 export class ProductsService{
+
     private productos:Product[] = [];
     private productsTxt:Files = new Files('src/persistencia/products.txt');
-
 
     private  getProductsFromFile() {     
         try {
@@ -23,19 +24,24 @@ export class ProductsService{
     }
 
      async getAllProducts(){
-        let productos = await getAll();
-        productos.forEach((product:Product) => {
-            this.productos.push(product)
-        });
+         if(this.productos.length ===0){
+            let productos = await ProductsMariaDB.selectProducts();
+            productos.forEach((product:Product) => {
+                this.productos.push(product)
+            });
+         }
+        
 
         return this.productos;
     }
 
    async getProductById(id:Number){
-        let productos = await getAll();
-        productos.forEach((product:Product) => {
-            this.productos.push(product)
-        });
+        if(this.productos.length ===0){
+            let productos = await ProductsMariaDB.selectProducts();
+            productos.forEach((product:Product) => {
+                this.productos.push(product)
+            });
+        }
         let found = this.productos.find(product => product.productId ===id)        
 
         if(!found){
@@ -52,23 +58,31 @@ export class ProductsService{
         let product = new Product(d,nombre,descripcion,codigo,foto,precio,stock,this.productos.length+1)
         this.productos.push(product);
         this.productsTxt.save(this.productos)
-        insertProducts(product);
+        ProductsMariaDB.insertProduct(product);
 
     }
 
     async updateProductById(data:any){
-        const {stock} = data.body;
-        const product = await this.getProductById(parseInt(data.params.id));
-        
-        product.stock = stock;
-        this.productsTxt.save(this.productos)
-        return product;
+        const {precio} = data.body;
+        try {
+            const product = await this.getProductById(parseInt(data.params.id));
+            product.precio = precio;
+            this.productsTxt.save(this.productos)
+            ProductsMariaDB.updateById(product.productId, precio);
+            
+            return product;
+            
+        } catch (error) {            
+            throw error
+        }    
     }
 
     async deleteProductById(id:Number){
         const found = await this.getProductById(id);
         this.productos = this.productos.filter(producto => producto.productId !== found.productId)
         this.productsTxt.save(this.productos)
+        ProductsMariaDB.deleteById(found.productId)
+        
     }
 
 }

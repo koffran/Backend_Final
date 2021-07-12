@@ -50,8 +50,8 @@ router.patch('/:id',(req,res,next)=>{
     admin?next():res.send({"error":-1, "descripcion": `ruta ${req.path} metodo ${req.method} no autorizada`})
 }, (req,res)=>{
     try {
-        productsService.updateProductById(req)
-         res.sendStatus(204);   
+        productsService.updateProductById(req);
+        res.sendStatus(204);   
     } catch (error) {
         res.status(404).send(error.message)
     }
