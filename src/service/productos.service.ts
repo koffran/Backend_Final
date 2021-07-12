@@ -1,7 +1,7 @@
 import Product from "../service/product";
 import Files from "../persistencia/Files";
 import ProductsMariaDB from "../persistencia/Databases/MariaDB/ProductsMariaDB";
-
+import ProductsSqlite3 from "../persistencia/Databases/Sqlite3/ProductsSqlite3";
 
 export class ProductsService{
 
@@ -25,19 +25,23 @@ export class ProductsService{
 
      async getAllProducts(){
          if(this.productos.length ===0){
-            let productos = await ProductsMariaDB.selectProducts();
+            //let productos = await ProductsMariaDB.selectProducts();   //USE MARIADB
+            let productos = await ProductsSqlite3.selectProducts();     //USE SQLITE3
+
+
+
             productos.forEach((product:Product) => {
                 this.productos.push(product)
             });
          }
-        
-
         return this.productos;
     }
 
    async getProductById(id:Number){
         if(this.productos.length ===0){
-            let productos = await ProductsMariaDB.selectProducts();
+            //let productos = await ProductsMariaDB.selectProducts(); //USE MARIADB
+            let productos = await ProductsSqlite3.selectProducts(); //USE SQLITE3
+
             productos.forEach((product:Product) => {
                 this.productos.push(product)
             });
@@ -58,8 +62,9 @@ export class ProductsService{
         let product = new Product(d,nombre,descripcion,codigo,foto,precio,stock,this.productos.length+1)
         this.productos.push(product);
         this.productsTxt.save(this.productos)
-        ProductsMariaDB.insertProduct(product);
 
+        //ProductsMariaDB.insertProduct(product);   // USE MARIA DB 
+        ProductsSqlite3.insertProduct(product);     // USE SQLITE3
     }
 
     async updateProductById(data:any){
@@ -68,10 +73,11 @@ export class ProductsService{
             const product = await this.getProductById(parseInt(data.params.id));
             product.precio = precio;
             this.productsTxt.save(this.productos)
-            ProductsMariaDB.updateById(product.productId, precio);
+           // ProductsMariaDB.updateById(product.productId, precio);    //USE MARIADB
+            ProductsSqlite3.updateById(product.productId, precio);       //USE SQLITE3
             
-            return product;
             
+            return product;  
         } catch (error) {            
             throw error
         }    
@@ -81,7 +87,8 @@ export class ProductsService{
         const found = await this.getProductById(id);
         this.productos = this.productos.filter(producto => producto.productId !== found.productId)
         this.productsTxt.save(this.productos)
-        ProductsMariaDB.deleteById(found.productId)
+        //ProductsMariaDB.deleteById(found.productId)   // USE MARIADB
+        ProductsSqlite3.deleteById(found.productId)     // USE SQLITE3
         
     }
 
